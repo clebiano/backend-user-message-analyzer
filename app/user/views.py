@@ -33,9 +33,17 @@ async def ge(
     response_model=UserCollectionOut,
 )
 async def get(
+    limit: int = Query(10, ge=1, description="Limit the number of users returned"),
+    offset: int = Query(0, ge=0, description="Offset for pagination"),
+    username: Optional[str] = Query(None, description="Filter by username"),
+    file_name: str = Query(..., description="File to be processed"),
+    min_msgs: int = Query(0, ge=0, description="Specifies the minimum number of messages in the user's inbox"),
+    max_msgs: int = Query(100, ge=1, description="Specifies the maximum number of messages in the user's inbox"),
     service: UserService = Depends(),
 ) -> UserCollectionOut:
-    users = await service.get_users_by_inbox_count()
+    users = await service.get_users_by_inbox_count(
+        limit=limit, offset=offset, username=username, file_name=file_name, min_msgs=min_msgs, max_msgs=max_msgs
+    )
 
     return users
 
