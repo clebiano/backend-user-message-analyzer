@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "backend-user-message-analyzer"
+version = "0.0.1"
+description = ""
+authors = ["Clebiano da Costa Sá <clebiano@alumni.usp.br>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111"
+pydantic = {extras = ["dotenv"], version = "^2.7"}
+uvicorn = "^0.30"
+pydantic-settings = "^2.3.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^8.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
