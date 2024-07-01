@@ -27,7 +27,7 @@ class UserService:
 
         file_path = UPLOAD_DIRECTORY / file_name
 
-        command = ["./scripts/order-by-username.sh", file_path, order]
+        command = ["./scripts/order-by-username.sh", file_path, f"-{order}"]
         shell_result = subprocess.run(command, capture_output=True, text=True)
 
         if shell_result.returncode != 0:
