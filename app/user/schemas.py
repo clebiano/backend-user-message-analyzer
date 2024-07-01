@@ -1,11 +1,16 @@
-from app.helpers.schemas import BaseSchemaMixin
+from pydantic import Field
+
+from app.helpers.schemas import BaseSchemaMixin, CollectionResponse
 
 
 class UserOut(BaseSchemaMixin):
-    pass
+    username: str = Field(title="Username")
+    folder: str = Field(title="Folder")
+    number_messages: int = Field(title="Total messages", alias='numberMessages')
+    size: int = Field(title="Message size")
 
 
-class UserCollectionOut(BaseSchemaMixin):
+class UserCollectionOut(CollectionResponse):
     results: list[UserOut]
 
     # class Config:

@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, status
+from typing import Optional
+from fastapi import APIRouter, Depends, status, Query
 
 from app.user.services import UserService
 from app.user.schemas import UserOut, UserCollectionOut
@@ -13,9 +14,14 @@ router = APIRouter()
     response_model=UserCollectionOut,
 )
 async def ge(
+    order: str = Query("asc", regex="^(asc|desc)$", description="Order by ascending or descending"),
+    limit: int = Query(10, ge=1, description="Limit the number of users returned"),
+    offset: int = Query(0, ge=0, description="Offset for pagination"),
+    username: Optional[str] = Query(None, description="Filter by username"),
+    file_name: str = Query(..., description="File to be processed"),
     service: UserService = Depends(),
 ) -> UserCollectionOut:
-    users = await service.get_users()
+    users = await service.get_users(order=order, limit=limit, offset=offset, username=username, file_name=file_name)
 
     return users
 
