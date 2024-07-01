@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, UploadFile, Response
+from fastapi import APIRouter, Depends, status, UploadFile, Response, Query
 
 from app.file.schemas import FileOut, FileCollectionOut
 from app.file.services import FileService
@@ -34,8 +34,11 @@ async def put(
     response_model=FileCollectionOut,
 )
 async def get(
+    limit: int = Query(10, ge=1, description="Limit the number of files returned"),
+    offset: int = Query(0, ge=0, description="Offset for pagination"),
+    # file_name: str = Query(..., description="File to be processed"),
     service: FileService = Depends(),
 ) -> FileCollectionOut:
-    files = await service.get_files()
+    files = await service.get_files(limit=limit, offset=offset)
 
     return files

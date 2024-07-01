@@ -31,7 +31,7 @@ class FileService:
 
         return FileOut(file_name=file.filename, size=file_path.stat().st_size)
 
-    async def get_files(self) -> FileCollectionOut:
+    async def get_files(self, limit: int, offset: int) -> FileCollectionOut:
         files = []
 
         for file_path in list(UPLOAD_DIRECTORY.glob("**/*")):
@@ -42,4 +42,17 @@ class FileService:
                 }
                 files.append(file_info)
 
-        return FileCollectionOut(results=files)
+        start = offset
+        end = start + limit
+        paginated_files = files[start:end]
+
+        return FileCollectionOut(
+            meta={
+                "page": {
+                    "limit": limit,
+                    "offset": offset,
+                    "count": len(paginated_files)
+                }
+            },
+            results=paginated_files
+        )

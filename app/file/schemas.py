@@ -1,4 +1,4 @@
-from app.helpers.schemas import BaseSchemaMixin
+from app.helpers.schemas import BaseSchemaMixin, CollectionResponse
 from pydantic import Field
 
 
@@ -10,7 +10,7 @@ class FileOut(BaseSchemaMixin):
     #     schema_extra = {'example': sku_collection_response_example}
 
 
-class FileCollectionOut(BaseSchemaMixin):
+class FileCollectionOut(CollectionResponse):
     results: list[FileOut]
 
     # class Config:
