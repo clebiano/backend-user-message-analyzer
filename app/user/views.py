@@ -55,8 +55,12 @@ async def get(
     response_model=UserOut,
 )
 async def get(
+    selection_criteria: str = Query(..., regex="^(min|max)$", description="Specifies the selection criteria based on "
+                                    "message size: 'min' to select the user with the smallest total message size, "
+                                    "'max' to select the user with the largest total message size."),
+    file_name: str = Query(..., description="File to be processed"),
     service: UserService = Depends(),
 ) -> UserOut:
-    user = await service.get_user_by_message_size()
+    user = await service.get_user_by_message_size(selection_criteria=selection_criteria, file_name=file_name)
 
     return user

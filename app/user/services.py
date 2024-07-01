@@ -111,5 +111,17 @@ class UserService:
             results=paginated_users
         )
 
-    async def get_user_by_message_size(self, event) -> UserOut:
-        return UserOut()
+    async def get_user_by_message_size(self, selection_criteria: str, file_name: str) -> UserOut:
+        await self.check_if_file_exists(filename=file_name)
+
+        file_path = UPLOAD_DIRECTORY / file_name
+
+        command = ["./scripts/max-min-size.sh", file_path, f"-{selection_criteria}"]
+        shell_result = subprocess.run(command, capture_output=True, text=True)
+
+        if shell_result.returncode != 0:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error executing the script: \"./scripts/max-min-size.sh\"")
+
+        user = self.parse_users(shell_result.stdout)[0]
+
+        return UserOut(**user)
